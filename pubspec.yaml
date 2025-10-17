@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   flutter_svg: ^2.0.9   # (en güncel sürümü kullanabilirsin)
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -107,4 +108,7 @@ flutter_native_splash:
   android_12:
     color: "#222831"
     image: assets/images/splash_logo.png
+    # ⏱ Sabit süre (milisaniye)
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
 

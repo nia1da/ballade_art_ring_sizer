@@ -1,7 +1,83 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dpi_helper.dart';
+
+// 🔹 Yüzük ölçü tablosu
+final List<Map<String, dynamic>> sizeChart = [
+  {"us": 1, "diameter": 13.0, "circumference": 40.84},
+  {"us": 1.5, "diameter": 13.16, "circumference": 41.35},
+  {"us": 2, "diameter": 13.32, "circumference": 41.85},
+  {"us": 2.5, "diameter": 13.48, "circumference": 42.36},
+  {"us": 3, "diameter": 13.65, "circumference": 42.87},
+  {"us": 3.5, "diameter": 13.81, "circumference": 43.38},
+  {"us": 4, "diameter": 13.97, "circumference": 43.88},
+  {"us": 4.5, "diameter": 14.13, "circumference": 44.39},
+  {"us": 5, "diameter": 14.29, "circumference": 44.90},
+  {"us": 5.5, "diameter": 14.45, "circumference": 45.40},
+  {"us": 6, "diameter": 14.61, "circumference": 45.91},
+  {"us": 6.5, "diameter": 14.78, "circumference": 46.42},
+  {"us": 7, "diameter": 14.94, "circumference": 46.93},
+  {"us": 7.5, "diameter": 15.10, "circumference": 47.43},
+  {"us": 8, "diameter": 15.26, "circumference": 47.94},
+  {"us": 8.5, "diameter": 15.42, "circumference": 48.45},
+  {"us": 9, "diameter": 15.58, "circumference": 48.95},
+  {"us": 9.5, "diameter": 15.74, "circumference": 49.46},
+  {"us": 10, "diameter": 15.91, "circumference": 49.97},
+  {"us": 10.5, "diameter": 16.07, "circumference": 50.48},
+  {"us": 11, "diameter": 16.23, "circumference": 50.98},
+  {"us": 11.5, "diameter": 16.39, "circumference": 51.49},
+  {"us": 12, "diameter": 16.55, "circumference": 52.00},
+  {"us": 12.5, "diameter": 16.71, "circumference": 52.50},
+  {"us": 13, "diameter": 16.87, "circumference": 53.01},
+  {"us": 13.5, "diameter": 17.04, "circumference": 53.52},
+  {"us": 14, "diameter": 17.20, "circumference": 54.03},
+  {"us": 14.5, "diameter": 17.36, "circumference": 54.53},
+  {"us": 15, "diameter": 17.52, "circumference": 55.04},
+  {"us": 15.5, "diameter": 17.68, "circumference": 55.55},
+  {"us": 16, "diameter": 17.84, "circumference": 56.05},
+  {"us": 16.5, "diameter": 18.00, "circumference": 56.56},
+  {"us": 17, "diameter": 18.17, "circumference": 57.07},
+  {"us": 17.5, "diameter": 18.33, "circumference": 57.58},
+  {"us": 18, "diameter": 18.49, "circumference": 58.08},
+  {"us": 18.5, "diameter": 18.65, "circumference": 58.59},
+  {"us": 19, "diameter": 18.81, "circumference": 59.10},
+  {"us": 19.5, "diameter": 18.97, "circumference": 59.60},
+  {"us": 20, "diameter": 19.13, "circumference": 60.11},
+  {"us": 20.5, "diameter": 19.30, "circumference": 60.62},
+  {"us": 21, "diameter": 19.46, "circumference": 61.13},
+  {"us": 21.5, "diameter": 19.62, "circumference": 61.63},
+  {"us": 22, "diameter": 19.78, "circumference": 62.14},
+  {"us": 22.5, "diameter": 19.94, "circumference": 62.65},
+  {"us": 23, "diameter": 20.10, "circumference": 63.15},
+  {"us": 23.5, "diameter": 20.26, "circumference": 63.66},
+  {"us": 24, "diameter": 20.43, "circumference": 64.17},
+  {"us": 24.5, "diameter": 20.59, "circumference": 64.68},
+  {"us": 25, "diameter": 20.75, "circumference": 65.18},
+  {"us": 25.5, "diameter": 20.91, "circumference": 65.69},
+  {"us": 26, "diameter": 21.07, "circumference": 66.20},
+  {"us": 26.5, "diameter": 21.23, "circumference": 66.70},
+  {"us": 27, "diameter": 21.39, "circumference": 67.21},
+  {"us": 27.5, "diameter": 21.56, "circumference": 67.72},
+  {"us": 28, "diameter": 21.72, "circumference": 68.23},
+  {"us": 28.5, "diameter": 21.88, "circumference": 68.73},
+  {"us": 29, "diameter": 22.04, "circumference": 69.24},
+  {"us": 29.5, "diameter": 22.20, "circumference": 69.75},
+  {"us": 30, "diameter": 22.36, "circumference": 70.25},
+  {"us": 30.5, "diameter": 22.52, "circumference": 70.76},
+  {"us": 31, "diameter": 22.69, "circumference": 71.27},
+  {"us": 31.5, "diameter": 22.85, "circumference": 71.78},
+  {"us": 32, "diameter": 23.01, "circumference": 72.28},
+  {"us": 32.5, "diameter": 23.17, "circumference": 72.79},
+  {"us": 33, "diameter": 23.33, "circumference": 73.30},
+  {"us": 33.5, "diameter": 23.49, "circumference": 73.80},
+  {"us": 34, "diameter": 23.65, "circumference": 74.31},
+  {"us": 34.5, "diameter": 23.82, "circumference": 74.82},
+  {"us": 35, "diameter": 23.98, "circumference": 75.33},
+  {"us": 35.5, "diameter": 24.14, "circumference": 75.83},
+  {"us": 36, "diameter": 24.30, "circumference": 76.34},
+];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,443 +87,305 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Ölçüm durumu
-  double diameterMm = 16.0; // slider ile ayarlanacak
-  double get circumferenceMm => diameterMm * math.pi;
+  double diameterMm = 13.0;
+  final double minDiameter = 13.0;
+  final double maxDiameter = 24.3;
 
-  // EU ölçü tablosu (örnek değerler: çap mm -> EU)
-  final List<Map<String, dynamic>> ringTable = List.generate(36, (i) {
-    // 1. ölçü = 13 mm, 36. ölçü = 24.3 mm
-    final step = (24.3 - 13.0) / 35;
-    final dia = 13.0 + i * step;
-    return {
-      "eu": i + 1,
-      "dia": dia,
-      "cir": dia * math.pi,
-    };
-  });
-
-  // Slider aralığı
-  final double minDia = 13.0;
-  final double maxDia = 24.3;
-
-  // Alt kısım linkleri (kendi linklerinle değiştir)
-  final Uri ig = Uri.parse('https://instagram.com/balladeart');
-  final Uri web = Uri.parse('https://example.com');
-  final Uri maps = Uri.parse('https://maps.google.com/?q=Ballade+Art');
+  Map<String, double> dpi = {"xdpi": 0.0, "ydpi": 0.0};
 
   @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
-    // Kutunun boyutu ekranın %68’i ama min/max sınırlarla
-    final baseEdge = width * 0.68;
-    const minEdge = 180.0;
-    final maxEdgeByW = width - 60;
-    final maxEdgeByH = height * 0.5;
-
-    // güvenli max hesap
-    final safeMaxEdge = math.max(minEdge, math.min(maxEdgeByW, maxEdgeByH));
-    final boxEdge = baseEdge.clamp(minEdge, safeMaxEdge);
-
-    // pxPerMm (telefonun pixel density'sine göre ayarlayabilirsin)
-    const pxPerMm = 10.0;
-    final ringPx = (diameterMm * pxPerMm).clamp(0.0, boxEdge - 20);
-
-    const bg = Color(0xFF222831);
-    const ink = Color(0xFFDFD0B8);
-
-    return Scaffold(
-      backgroundColor: bg,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Başlık
-              Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 12),
-                child: Text(
-                  'BALLADEART',
-                  style: const TextStyle(
-                    color: ink,
-                    fontSize: 28,
-                    letterSpacing: 4,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-              // Üst kontrol satırı
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _svgIconBig("assets/icons/help.svg", onTap: _showHelp),
-                  _MeasurementBox(edge: boxEdge, diameterPx: ringPx),
-                  _svgIconBig("assets/icons/forward.svg", onTap: () {
-                    _showSnack('Next action here');
-                  }),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Slider + oklar
-              Row(
-                children: [
-                  _tinyArrow(onTap: () => _nudge(-0.1), icon: Icons.chevron_left),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        _Ruler(min: minDia, max: maxDia, value: diameterMm),
-                        Slider(
-                          min: minDia,
-                          max: maxDia,
-                          divisions: ((maxDia - minDia) * 10).round(),
-                          value: diameterMm,
-                          activeColor: ink,
-                          inactiveColor: ink.withOpacity(0.3),
-                          onChanged: (v) {
-                            setState(() {
-                              diameterMm = double.parse(v.toStringAsFixed(1));
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  _tinyArrow(onTap: () => _nudge(0.1), icon: Icons.chevron_right),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // "Size Chart"
-              Row(
-                children: const [
-                  Text('Size Chart',
-                      style: TextStyle(color: ink, fontSize: 18)),
-                  Spacer(),
-                  Icon(Icons.circle_outlined, color: ink, size: 20),
-                  SizedBox(width: 8),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // Tablo
-              Expanded(
-                child: SingleChildScrollView(
-                  child: _SizeTable(
-                    table: ringTable,
-                    currentDia: diameterMm,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              // Alt ikonlar
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _svgIcon("assets/icons/insta.svg", onTap: () => _open(ig)),
-                  _svgIcon("assets/icons/website.svg", onTap: () => _open(web)),
-                  _svgIcon("assets/icons/location.svg", onTap: () => _open(maps)),
-                ],
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+    DpiHelper.getDpi().then((value) {
+      setState(() {
+        dpi = value;
+      });
+    });
   }
 
-  // --- helpers --------------------------------------------------------------
-
-  void _nudge(double delta) {
-    final next = (diameterMm + delta).clamp(minDia, maxDia);
-    setState(() => diameterMm = double.parse(next.toStringAsFixed(1)));
+  void _stepBackward() {
+    setState(() {
+      diameterMm = (diameterMm - 0.16).clamp(minDiameter, maxDiameter);
+    });
   }
 
-  Widget _tinyArrow({required VoidCallback onTap, required IconData icon}) {
-    return IconButton(
-      onPressed: onTap,
-      icon: Icon(icon, size: 26, color: const Color(0xFFDFD0B8)),
-    );
+  void _stepForward() {
+    setState(() {
+      diameterMm = (diameterMm + 0.16).clamp(minDiameter, maxDiameter);
+    });
   }
 
-  Widget _svgIconBig(String path, {required VoidCallback onTap}) {
-    return InkResponse(
-      onTap: onTap,
-      radius: 32,
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: const BoxDecoration(shape: BoxShape.circle),
-        child: SvgPicture.asset(
-          path,
-          fit: BoxFit.contain,
-          color: const Color(0xFFDFD0B8),
-        ),
-      ),
-    );
-  }
-
-  Widget _svgIcon(String path, {required VoidCallback onTap}) {
-    return InkResponse(
-      onTap: onTap,
-      radius: 20,
-      child: SizedBox(
-        width: 36,
-        height: 36,
-        child: SvgPicture.asset(
-          path,
-          fit: BoxFit.contain,
-          color: const Color(0xFFDFD0B8),
-        ),
-      ),
-    );
-  }
-
-  void _showHelp() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF0F1419),
-      showDragHandle: true,
-      builder: (_) => const Padding(
-        padding: EdgeInsets.all(16),
-        child: Text(
-          'Yüzüğünüzü ekranın ortasındaki daireye hizalayın. '
-              'Dairenin çapını slider ile büyütüp küçültün. '
-              'Alt kısımdaki tablo, seçtiğiniz değere karşılık gelen EU (ISO) ölçüsünü gösterir.',
-          style: TextStyle(color: Color(0xFFDFD0B8)),
-        ),
-      ),
-    );
-  }
-
-  void _showSnack(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }
-
-  Future<void> _open(Uri uri) async {
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      _showSnack('Açılamadı: $uri');
-    }
-  }
-}
-
-/// Ölçüm kutusu
-class _MeasurementBox extends StatelessWidget {
-  final double edge;
-  final double diameterPx;
-
-  const _MeasurementBox({required this.edge, required this.diameterPx});
-
-  @override
-  Widget build(BuildContext context) {
-    const ink = Color(0xFFDFD0B8);
-    const inkDim = Color(0x66DFD0B8);
-
-    return Container(
-      width: edge,
-      height: edge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: inkDim),
-      ),
-      child: CustomPaint(
-        painter: _GridPainter(lineColor: inkDim),
-        child: Center(
-          child: Container(
-            width: diameterPx,
-            height: diameterPx,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: ink, width: 2),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Grid painter
-class _GridPainter extends CustomPainter {
-  final Color lineColor;
-  const _GridPainter({required this.lineColor});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final p = Paint()..color = lineColor..strokeWidth = 1.2;
-    const step = 20.0;
-    for (double x = 0; x <= size.width; x += step) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);
-    }
-    for (double y = 0; y <= size.height; y += step) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+  Future<void> _shareOnWhatsApp(String message) async {
+    final url = Uri.parse("https://wa.me/?text=${Uri.encodeComponent(message)}");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 
   @override
-  bool shouldRepaint(covariant _GridPainter oldDelegate) => false;
-}
-
-/// Cetvel painter
-class _Ruler extends StatelessWidget {
-  final double min, max, value;
-  const _Ruler({required this.min, required this.max, required this.value});
-
-  @override
   Widget build(BuildContext context) {
-    const ink = Color(0x66DFD0B8);
-    const strong = Color(0xFFDFD0B8);
-    return SizedBox(
-      height: 30,
-      child: CustomPaint(
-        painter: _RulerPainter(
-          min: min,
-          max: max,
-          value: value,
-          line: ink,
-          strong: strong,
-        ),
-      ),
-    );
-  }
-}
-
-class _RulerPainter extends CustomPainter {
-  final double min, max, value;
-  final Color line, strong;
-
-  _RulerPainter(
-      {required this.min,
-        required this.max,
-        required this.value,
-        required this.line,
-        required this.strong});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final total = max - min;
-    final pThin = Paint()..color = line..strokeWidth = 1;
-    final pBold = Paint()..color = strong..strokeWidth = 2;
-
-    final int mmTicks = (total * 2).round();
-
-    for (int i = 0; i <= mmTicks; i++) {
-      final x = size.width * (i / mmTicks);
-      final isFullMm = i % 2 == 0;
-      final h = isFullMm ? size.height : size.height * 0.6;
-      canvas.drawLine(
-          Offset(x, size.height - h),
-          Offset(x, size.height),
-          isFullMm ? pBold : pThin);
-    }
-
-    // ok işareti
-    final dx = size.width * ((value - min) / total);
-    final path = Path()
-      ..moveTo(dx, 0)
-      ..lineTo(dx - 7, 10)
-      ..lineTo(dx + 7, 10)
-      ..close();
-    canvas.drawPath(path, pBold);
-  }
-
-  @override
-  bool shouldRepaint(covariant _RulerPainter old) =>
-      old.value != value || old.min != min || old.max != max;
-}
-
-/// Tablo
-class _SizeTable extends StatelessWidget {
-  final List<Map<String, dynamic>> table;
-  final double currentDia;
-
-  const _SizeTable({required this.table, required this.currentDia});
-
-  @override
-  Widget build(BuildContext context) {
-    const ink = Color(0xFFDFD0B8);
-
-    // en yakın 3 ölçüyü göster
-    table.sort((a, b) =>
-        (a['dia'] as double).compareTo(b['dia'] as double));
-    final nearest = table
-        .map((e) => e)
-        .toList()
-      ..sort((a, b) =>
-          ((a['dia'] - currentDia).abs())
-              .compareTo((b['dia'] - currentDia).abs()));
-
-    final rows = nearest.take(4).toList();
-
-    Widget headerCell(String t) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(t,
-          style: const TextStyle(color: ink, fontSize: 12),
-          textAlign: TextAlign.center),
-    );
-
-    TableRow header = TableRow(
-      children: [
-        headerCell('EU\nISO'),
-        headerCell('Diameter (mm)'),
-        headerCell('Circumference (mm)'),
-      ],
-    );
-
-    List<TableRow> body = [];
-    for (final r in rows) {
-      final isSel =
-          (r['dia'] - currentDia).abs() < 0.2; // yakın ölçü highlight
-      body.add(
-        TableRow(
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: isSel ? ink : ink.withOpacity(0.3)),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          children: [
-            _cell(r['eu'].toString(), isSel),
-            _cell(r['dia'].toStringAsFixed(1), isSel),
-            _cell(r['cir'].toStringAsFixed(1), isSel),
-          ],
-        ),
+    if (dpi["xdpi"] == 0.0) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    return Table(
-      columnWidths: const {
-        0: FlexColumnWidth(1.2),
-        1: FlexColumnWidth(1.4),
-        2: FlexColumnWidth(1.6),
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [header, ...body],
-    );
-  }
+    double xdpi = dpi["xdpi"]!;
+    double dpr = MediaQuery.of(context).devicePixelRatio;
 
-  Widget _cell(String text, bool highlight) {
-    const ink = Color(0xFFDFD0B8);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: ink,
-          fontWeight: highlight ? FontWeight.w600 : FontWeight.w400,
+    // kutu ve halka ölçüleri dp
+    double maxDiameterDp =
+        DpiHelper.mmToDp(mm: maxDiameter, dpi: xdpi, dpr: dpr) + 40;
+    double currentDiameterDp =
+    DpiHelper.mmToDp(mm: diameterMm, dpi: xdpi, dpr: dpr);
+
+    // en yakın index
+    final closestIndex = sizeChart.indexed.reduce((a, b) =>
+    (a.$2['diameter'] - diameterMm).abs() <
+        (b.$2['diameter'] - diameterMm).abs()
+        ? a
+        : b).$1;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF222831),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          child: Column(
+          children: [
+            const SizedBox(height: 16),
+            Text(
+              "BALLADEART",
+              style: GoogleFonts.cinzel(
+                fontSize: 28,
+                letterSpacing: 4,
+                color: const Color(0xFFDFD0B8),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // kutu + halka + ikonlar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Nasıl Kullanılır"),
+                        content: const Text(
+                          "Yüzüğünüzü ekrandaki halkanın üzerine yerleştirin.\n"
+                              "Slider veya listeden çapı ayarlayın.\n"
+                              "Ölçünüzü kontrol edin.",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Tamam"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: SvgPicture.asset(
+                    "assets/icons/help.svg",
+                    width: 45,
+                    height: 45,
+                    colorFilter:
+                    const ColorFilter.mode(Color(0xFFDFD0B8), BlendMode.srcIn),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/grid_box.svg",
+                      width: maxDiameterDp,
+                      height: maxDiameterDp,
+                      fit: BoxFit.contain,
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xFFDFD0B8), BlendMode.srcIn),
+                    ),
+                    Container(
+                      width: currentDiameterDp,
+                      height: currentDiameterDp,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: const Color(0xFFDFD0B8), width: 1.5),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 12),
+                IconButton(
+                  onPressed: () {
+                    final item = sizeChart[closestIndex];
+                    final message =
+                        "Yüzük ölçüm sonucu:\nÖlçü: ${item['us']}\nÇap: ${item['diameter']} mm\nÇevre: ${item['circumference']} mm";
+                    _shareOnWhatsApp(message);
+                  },
+                  icon: SvgPicture.asset(
+                    "assets/icons/forward.svg",
+                    width: 45,
+                    height: 45,
+                    colorFilter:
+                    const ColorFilter.mode(Color(0xFFDFD0B8), BlendMode.srcIn),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // slider + oklar
+            Row(
+              children: [
+                IconButton(
+                  onPressed: _stepBackward,
+                  icon: const Icon(Icons.chevron_left,
+                      color: Color(0xFFDFD0B8)),
+                ),
+                Expanded(
+                  child: Slider(
+                    activeColor: const Color(0xFFDFD0B8),
+                    inactiveColor:
+                    const Color(0xFFDFD0B8).withValues(alpha: 0.3),
+                    value: diameterMm,
+                    min: minDiameter,
+                    max: maxDiameter,
+                    divisions: sizeChart.length - 1,
+                    onChanged: (value) {
+                      setState(() {
+                        diameterMm = value;
+                      });
+                    },
+                  ),
+                ),
+                IconButton(
+                  onPressed: _stepForward,
+                  icon: const Icon(Icons.chevron_right,
+                      color: Color(0xFFDFD0B8)),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Size Chart",
+                    style: TextStyle(
+                        color: Color(0xFFDFD0B8), fontSize: 18)),
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // liste
+            Expanded(
+              child: ListView.builder(
+                itemCount: sizeChart.length,
+                itemBuilder: (context, index) {
+                  final item = sizeChart[index];
+                  final isSelected = index == closestIndex;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        diameterMm = item['diameter'];
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xFFDFD0B8)),
+                        borderRadius: BorderRadius.circular(8),
+                        color: isSelected
+                            ? const Color(0xFFDFD0B8).withValues(alpha: 0.1)
+                            : Colors.transparent,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("${item['us']}",
+                              style: const TextStyle(color: Color(0xFFDFD0B8),fontSize: 18)),
+                          Text("${item['diameter']}",
+                              style: const TextStyle(color: Color(0xFFDFD0B8),fontSize: 18)),
+                          Text("${item['circumference']}",
+                              style: const TextStyle(color: Color(0xFFDFD0B8),fontSize: 18)),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // alt ikonlar
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16, top: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      final url = Uri.parse("https://www.instagram.com/balladeart?igsh=Z3B6bHV5OWd4MXFw");
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      "assets/icons/insta.svg",
+                      width: 32,
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xFFDFD0B8), BlendMode.srcIn),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      final url = Uri.parse("https://www.balladeart.com/");
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      "assets/icons/website.svg",
+                      width: 32,
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xFFDFD0B8), BlendMode.srcIn),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      final url = Uri.parse("https://maps.app.goo.gl/3FNax1PRdAbcfiPN7");
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      "assets/icons/location.svg",
+                      width: 30,
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xFFDFD0B8), BlendMode.srcIn),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
+    )
     );
   }
 }
