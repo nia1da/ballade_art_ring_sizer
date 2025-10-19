@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.9   # (en güncel sürümü kullanabilirsin)
+  video_player: ^2.9.1
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -67,6 +69,8 @@ flutter:
     - assets/images/
     - assets/misc/
     - assets/icons/
+    - assets/videos/help.mp4
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
