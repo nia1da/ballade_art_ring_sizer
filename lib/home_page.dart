@@ -101,16 +101,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     final langCode = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
-    isTurkish = langCode == 'tr';
+    isTurkish = langCode == 'tr';   // <-- dil tespiti buraya eklendi
 
-    DpiHelper.getDpi().then((value) {
-      setState(() {
-        dpi = value;
-      });
-    });
+    _loadDpi();
   }
+
+  Future<void> _loadDpi() async {
+    final result = await DpiHelper.getDpi();
+    if (!mounted) return; // clean guard
+    setState(() => dpi = result);
+  }
+
 
   // 🔸 Seçili satırı görünür tut
   void _scrollToSelected() {
@@ -149,13 +151,51 @@ class _HomePageState extends State<HomePage> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToSelected());
   }
+  Future<void> _showHelpVideo() async {
+    final controller = VideoPlayerController.asset('assets/videos/help.mp4');
+
+    await controller.initialize();
+    if (!mounted) return; // <- profesyonel koruma
+
+    controller
+      ..setLooping(true)
+      ..play();
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: const Color(0xFF222831),
+        title: Text(
+          isTurkish ? "Nasıl Kullanılır" : "How to Use",
+          style: const TextStyle(color: Color(0xFFDFD0B8)),
+        ),
+        content: AspectRatio(
+          aspectRatio: controller.value.aspectRatio,
+          child: VideoPlayer(controller),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              isTurkish ? "Kapat" : "Close",
+              style: const TextStyle(color: Color(0xFFDFD0B8)),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    controller.dispose();
+  }
+
 
   Future<void> _shareOnWhatsApp(String message) async {
     final url = Uri.parse("https://wa.me/?text=${Uri.encodeComponent(message)}");
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
-  }
+  }//KILL ME NOW
 
   @override
   Widget build(BuildContext context) {
@@ -204,35 +244,15 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(isTurkish ? "Nasıl Kullanılır" : "How to Use"),
-                          content: Text(isTurkish
-                              ? "Yüzüğünüzü ekrandaki halkanın üzerine yerleştirin.\n"
-                              "Slider veya listeden çapı ayarlayın.\n"
-                              "Ölçünüzü kontrol edin."
-                              : "Place your ring over the on-screen circle.\n"
-                              "Adjust the diameter using the slider or list.\n"
-                              "Check your size."),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(isTurkish ? "Tamam" : "OK"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                    onPressed: () => _showHelpVideo(),
                     icon: SvgPicture.asset(
                       "assets/icons/help.svg",
                       width: 45,
                       height: 45,
-                      colorFilter: const ColorFilter.mode(
-                          Color(0xFFDFD0B8), BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(Color(0xFFDFD0B8), BlendMode.srcIn),
                     ),
                   ),
+
                   const SizedBox(width: 12),
                   Stack(
                     alignment: Alignment.center,
@@ -251,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                              color: const Color(0xFFDFD0B8), width: 1.5),
+                              color: const Color(0xFFDFD0B8), width: 1.8),
                         ),
                       ),
                     ],
@@ -270,10 +290,11 @@ class _HomePageState extends State<HomePage> {
                       "assets/icons/forward.svg",
                       width: 45,
                       height: 45,
-                      colorFilter: const ColorFilter.mode(
-                          Color(0xFFDFD0B8), BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(Color(0xFFDFD0B8), BlendMode.srcIn),
                     ),
                   ),
+
+
                 ],
               ),
 
@@ -291,11 +312,11 @@ class _HomePageState extends State<HomePage> {
                     child: Slider(
                       activeColor: const Color(0xFFDFD0B8),
                       inactiveColor:
-                      const Color(0xFFDFD0B8).withValues(alpha: 0.3),
+                      const Color(0xFFDFD0B8).withValues(alpha: 0.6),
                       value: diameterMm,
                       min: minDiameter,
                       max: maxDiameter,
-                      divisions: sizeChart.length - 1,
+
                       onChanged: (value) {
                         setState(() {
                           diameterMm = value;
@@ -336,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -354,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                           style : TextStyle(
                             color: Color(0xFFDFD0B8),
                             fontWeight: FontWeight.w600,
-                            fontSize: 12,
+                            fontSize: 10,
                           ),
                         ),
                       ),
@@ -366,7 +387,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               color: Color(0xFFDFD0B8),
                               fontWeight: FontWeight.w600,
-                              fontSize: 12,
+                              fontSize: 10,
                             ),
                           ),
                         ),
@@ -380,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               color: Color(0xFFDFD0B8),
                               fontWeight: FontWeight.w600,
-                              fontSize: 12,
+                              fontSize: 10,
                             ),
                           ),
                         ),

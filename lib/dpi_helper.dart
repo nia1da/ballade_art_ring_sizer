@@ -23,9 +23,7 @@ class DpiHelper {
   }
 
   /// px → mm dönüşümü
-  static double pxToMm(double px, double dpi) {
-    return px / pixelsPerMm(dpi);
-  }
+
 
   /// 🔸 mm → dp (Flutter'ın çizim birimi, logical pixel)
   /// Burada devicePixelRatio ile fiziksel px → dp dönüşümü yapıyoruz
