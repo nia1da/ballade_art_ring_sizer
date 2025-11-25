@@ -1,0 +1,46 @@
+Proje Durum Raporu (Özet)**
+
+Öğrenci: İlayda Nihal Kavanoz
+Ders: iOS Uygulama Geliştirme
+Proje: Ballade Art – Yüzük Ölçü Uygulaması
+Tarih: Kasım 2025
+
+✔️ 1. Proje Kurulumu
+
+Flutter proje yapısı oluşturuldu.
+
+iOS ve Android platformları eklendi.
+
+pubspec.yaml düzenlendi, gerekli paketler eklendi (url_launcher, share_plus, flutter_native_splash).
+
+✔️ 2. Splash Ekranı
+
+Ballade Art logosu ile açılış ekranı hazırlandı.
+
+iOS için splash konfigurasyonu yapıldı.
+
+✔️ 3. Ana Ekran (HomePage)
+
+Ölçeklenebilir yüzük ölçüm dairesi eklendi.
+
+Daire boyutunu kontrol eden slider tamamlandı.
+
+Kullanıcı daireyi yüzüğüyle hizaladığında çap, çevre ve EU ölçü hesaplaması yapılıyor.
+
+✔️ 4. Ölçüm Mekanizması
+
+dpi_helper.dart ile cihazın DPI değerine göre mm hesaplaması oluşturuldu.
+
+Dairenin her cihazda fiziksel olarak aynı ölçekte görünmesi sağlandı.
+
+✔️ 5. Yüzük Ölçü Tablosu
+
+ISO yüzük ölçü tablosu uygulamaya eklendi.
+
+Çap → EU size dönüşümü çalışır durumda.
+
+✔️ 6. Sosyal Medya ve Linkler
+
+WhatsApp, Instagram ve Website butonları aktif hale getirildi.
+
+Yardım butonu eklendi (ölçüm açıklaması içeriyor).
